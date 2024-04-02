@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import {
   Sidebar,
@@ -16,19 +17,46 @@ import {
   SearchBarContainer,
   SearchInput,
   SearchIconConmponent,
+  HomeIcon,
 } from "./Styled.Sidebar";
+import { WebviewTag } from "electron";
+import { Link } from "react-router-dom";
 
 
+interface SidebarProps {
+  setSearchValue: (url: string) => void;
+  searchTo: (url: string, webView?: WebviewTag) => Promise<boolean>;
+  sidebarExpanded: boolean;
+  setSidebarExpanded: (state: boolean) => void;
+}
 
-export const SidebarComponent: React.FC = () => {
+export const SidebarComponent: React.FC<SidebarProps> = ({ setSearchValue, searchTo }) => {
   const ShieldStates = {
     onFocus: "highlighted",
     protected: "protected",
     unsecure: "unsecure",
     standby: "standby"
   };
+
   const [shieldStyle, setShieldStyle] = useState(ShieldStates.standby);
+  const webview = document.querySelector('webview') as WebviewTag
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [shiftPressed, setShiftPressed] = useState(false);
+  const [hasSSL, updateSSLVerification] = useState(false);
+  const [redirected, updateState] = useState(false);
+  const [searchValue, updateSValue] = useState("");
+
+  function reloadPage() {
+    webview.reload();
+  }
+
+  function goBack() {
+    webview.goBack();
+  }
+
+  function goForward() {
+    webview.goForward();
+  }
 
   // ACTIONS
   function requestClose(): void {
@@ -64,6 +92,47 @@ export const SidebarComponent: React.FC = () => {
   document.addEventListener("keyup", (event) => {
     if (event.key === "Shift") {
       setShiftPressed(false);
+    }
+  });
+
+  function checkURL() {
+    if (!redirected) {
+      document.getElementById('bH339HD')?.click();
+      updateState(true)
+    }
+
+    setTimeout(() => {
+      updateState(false)
+    }, 30000)
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      let url = `http://${searchValue}`;
+      setSearchValue("");
+      checkURL()
+
+      if (searchValue.startsWith("https://") || searchValue.startsWith("skynet://") || searchValue.startsWith("skysearch://")) {
+        setSearchValue(searchValue);
+        searchTo(searchValue).then(() => {
+          document.getElementById('bH339HD')?.click();
+          return console.log("search finish")
+        });
+        return
+      }
+      if (searchValue.startsWith("http://") || searchValue.startsWith("skynetUnp://")) {
+        searchTo(searchValue).then(() => {
+          document.getElementById('bH339HD')?.click();
+          return console.log("search finish")
+        });
+        return
+      } else {
+        searchTo(url).then(() => {
+          document.getElementById('bH339HD')?.click();
+          return console.log("search finish")
+        });
+        return
+      }
     }
   });
 
@@ -125,9 +194,6 @@ export const SidebarComponent: React.FC = () => {
     }
   }
 
-  const [searchValue, updateSValue] = useState("");
-  const [hasSSL, updateSSLVerification] = useState(false);
-
   useEffect(() => {
     if (searchValue === "/activePRT") {
       updateSValue("skynet://application:browser/rpc&send/rpcInfo");
@@ -160,14 +226,34 @@ export const SidebarComponent: React.FC = () => {
     if (event.shiftKey) {
       window.electron.ipcRenderer.send("skynet://application:browser/funcions/hardReload")
     } else {
-      // Paginas e Navegação não implementadas ainda
+      reloadPage()
+      return;
     }
   }
 
+
+  const toggleSidebar = () => {
+    const sidebarElement = document.getElementById('sidebar');
+    if (!sidebarExpanded) {
+      setTimeout(() => {
+        if (sidebarElement) {
+          console.log("fechou")
+          sidebarElement.style.display = 'none';
+        }
+      }, 1500);
+    } else {
+      if (sidebarElement) {
+        console.log("abriu")
+        sidebarElement.style.display = 'flex';
+      }
+    }
+    setSidebarExpanded(!sidebarExpanded);
+  };
+
   return (
-    <Sidebar>
+    <Sidebar expanded={sidebarExpanded}>
       <NavigationContainer>
-        <Navigation>
+        <Navigation expanded={sidebarExpanded}>
           <WindowsActionsContainer>
             <WindowActionControl
               className="close"
@@ -187,26 +273,28 @@ export const SidebarComponent: React.FC = () => {
             />
           </WindowsActionsContainer>
           <WActions>
+            <Link to="/newtab" id="sdfIHNR8" onClick={() => {reloadPage()}}>
             <SideBarContent>
+              <HomeIcon />
+            </SideBarContent>
+             </Link>
+            <SideBarContent onClick={() => toggleSidebar()}>
               <SideBarIcon />
             </SideBarContent>
-            <SideBarContent>
+            <SideBarContent onClick={() => goBack()}>
               <ArrowBackIcon />
             </SideBarContent>
             <SideBarContent onClick={(e) => handleButtonClick(e)}>
               <RefreshIcon className={shiftPressed ? 'hardAction' : ''} />
             </SideBarContent>
-            <SideBarContent>
+            <SideBarContent onClick={() => goForward()}>
               <ArrowNextIcon />
             </SideBarContent>
-            {/* <SideBarContent>
-              <HomeIcon />
-            </SideBarContent> */}
           </WActions>
         </Navigation>
       </NavigationContainer>
 
-      <SearchBarContainer>
+      <SearchBarContainer id="sidebar" expanded={sidebarExpanded}>
         <SearchIconConmponent
           onClick={async () => {
             console.log("okSkynetON");

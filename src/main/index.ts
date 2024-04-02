@@ -1,5 +1,5 @@
-import { app, shell, BrowserWindow, ipcMain, autoUpdater } from "electron";
-import { join } from "path";
+import { app, shell, BrowserWindow, ipcMain, autoUpdater, protocol } from "electron";
+import path, { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import appIcon from "../../resources/icon.png?asset";
 import icon from "../../resources/winIcon.ico?asset";
@@ -63,7 +63,8 @@ function createWindow(): void {
     ...(process.platform === "win32" ? { icon } : { appIcon }),
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
-      sandbox: false,
+      webviewTag: true,
+      sandbox: false
     },
   });
   mainWindow.maximize();
@@ -71,6 +72,23 @@ function createWindow(): void {
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
   });
+
+  if (process.defaultApp) {
+    if (process.argv.length >= 2) {
+      app.setAsDefaultProtocolClient('skysearch', process.execPath, [path.resolve(process.argv[1])]);
+    }
+  } else {
+    app.setAsDefaultProtocolClient('skysearch')
+  }
+
+  protocol.registerHttpProtocol('skysearch', (request, _callback) => {
+    if(typeof window !== "undefined") {
+      window.location.replace(`${process.env.APP_URL}/${request.url.replace("skysearch://", "")}`);
+    } else {
+      mainWindow.loadURL(`${process.env.APP_URL}/${request.url.replace("skysearch://", "")}`);
+    }
+  });
+
 
   mainWindow.webContents.setWindowOpenHandler(details => {
     shell.openExternal(details.url);

@@ -1,0 +1,8 @@
+webview {
+  position: absolute;
+  z-index: 900;
+  height: 100vh;
+  width: 82.8vw;
+  right: 0;
+  color: #4d4d4d;
+}

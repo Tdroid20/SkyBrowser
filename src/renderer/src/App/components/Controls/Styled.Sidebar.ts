@@ -19,11 +19,16 @@ export interface SidebarProps {
   windowsActionType: windowAction;
 }
 
-export const Sidebar = styled.div`
-  max-width: 234px;
+export const Sidebar = styled.div<SideBarState>`
+  max-width: ${({ expanded }) => (expanded ? '100vw' : '234px')};
   height: 100vh;
-  background: rgba(39, 39, 39, 0.68);
+  backdrop-filter: blur(22px);
+  z-index: 10000;
 `;
+
+interface SideBarState {
+  expanded: boolean
+}
 
 export const NavigationContainer = styled.div`
   width: 100%;
@@ -33,10 +38,9 @@ export const NavigationContainer = styled.div`
   justify-content: center;
 `;
 
-export const Navigation = styled.div`
-  width: 85%;
+export const Navigation = styled.div<SideBarState>`
+  width: ${({ expanded }) => (expanded ? '97vw' : '85%')};
   height: 35%;
-
   padding: 12px;
   margin-top: 12px;
   display: flex;
@@ -177,7 +181,8 @@ export const HomeIcon: any = styled(Home)`
   cursor: pointer;
 `;
 
-export const SearchBarContainer = styled.div`
+export const SearchBarContainer = styled.div<SideBarState>`
+  position: absolute;
   display: flex;
   align-items: center;
   width: 200px;
@@ -186,7 +191,9 @@ export const SearchBarContainer = styled.div`
   margin-top: 12px;
   margin-left: 5px;
   border-radius: 12px;
+  left: ${({ expanded }) => (expanded ? '-229px' :'4px')};
   background: #8080808c;
+  transition: left 1.5s linear;
 `;
 
 export const SearchInput = styled.input`
@@ -197,8 +204,8 @@ export const SearchInput = styled.input`
   border: none;
   color: #fff;
 
-  font-family: "SF Pro Display", sans-serif;
-  font-weight: 900;
+  font-family: "roboto", sans-serif;
+  font-weight: 500;
 
   &:focus {
     outline: none;
