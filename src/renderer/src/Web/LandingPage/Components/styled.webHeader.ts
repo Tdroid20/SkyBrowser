@@ -33,6 +33,7 @@ export const WebStyleHBrandTypography = styled.p`
   font-weight: 900;
   font-size: 16px;
   display: flex;
+  margin-right: 50px;
 
   color: purple;
 `;

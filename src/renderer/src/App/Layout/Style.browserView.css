@@ -2,7 +2,14 @@ webview {
   position: absolute;
   z-index: 900;
   height: 100vh;
-  width: 82.8vw;
+  width: calc(100vw - 234px);
   right: 0;
   color: #4d4d4d;
+  transition: all 1s ease-in-out;
+}
+
+.expanded {
+  width: 100vw;
+  height: calc(100vw - 234px);
+  top: 58px;
 }

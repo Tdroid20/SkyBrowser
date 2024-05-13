@@ -18,7 +18,7 @@ export const WebHeaderComponent: React.FC = () => {
       <WebStyleHBrandContainer>
         <WebStyleHBrand src={skBrowserIcon} />
         <WebStyleHBrandTypography>
-          Sky
+          Skye
           <SKDS_Strong>Browser</SKDS_Strong>
         </WebStyleHBrandTypography>
       </WebStyleHBrandContainer>

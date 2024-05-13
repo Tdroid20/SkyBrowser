@@ -27,10 +27,10 @@ interface SidebarProps {
   setSearchValue: (url: string) => void;
   searchTo: (url: string, webView?: WebviewTag) => Promise<boolean>;
   sidebarExpanded: boolean;
-  setSidebarExpanded: (state: boolean) => void;
+  updateSidebarStatus: () => void;
 }
 
-export const SidebarComponent: React.FC<SidebarProps> = ({ setSearchValue, searchTo }) => {
+export const SidebarComponent: React.FC<SidebarProps> = ({ setSearchValue, searchTo, updateSidebarStatus }) => {
   const ShieldStates = {
     onFocus: "highlighted",
     protected: "protected",
@@ -247,7 +247,9 @@ export const SidebarComponent: React.FC<SidebarProps> = ({ setSearchValue, searc
         sidebarElement.style.display = 'flex';
       }
     }
-    setSidebarExpanded(!sidebarExpanded);
+    updateSidebarStatus();
+    setSidebarExpanded(!sidebarExpanded)
+    console.log(sidebarExpanded)
   };
 
   return (

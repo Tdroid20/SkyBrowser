@@ -60,7 +60,7 @@ function createWindow(): void {
     show: false,
     frame: false,
     autoHideMenuBar: true,
-    ...(process.platform === "win32" ? { icon } : { appIcon }),
+    icon: process.platform === "win32" ? icon : appIcon,
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       webviewTag: true,

@@ -19,16 +19,19 @@ export interface SidebarProps {
   windowsActionType: windowAction;
 }
 
-export const Sidebar = styled.div<SideBarState>`
-  max-width: ${({ expanded }) => (expanded ? '100vw' : '234px')};
-  height: 100vh;
-  backdrop-filter: blur(22px);
-  z-index: 10000;
-`;
 
 interface SideBarState {
   expanded: boolean
 }
+
+export const Sidebar = styled.div<SideBarState>`
+  max-width: ${({ expanded }) => (expanded ? '100vw' : '234px')};
+  height: ${({ expanded }) => (expanded ? '58px' : '100vh')};;
+  ${(expanded) => (expanded ? "backdrop-filter: blur(22px);" : "")}
+  ${(expanded) => (expanded ? "background: rgba(39, 39, 39, 0.68);" : "")}
+  z-index: 1000;
+  transition: all 1s ease-in-out;
+`;
 
 export const NavigationContainer = styled.div`
   width: 100%;
@@ -48,6 +51,10 @@ export const Navigation = styled.div<SideBarState>`
   background: #242424;
   border-radius: 10px;
   -webkit-app-region: drag;
+  transition: width .5s linear;
+
+  position: relative;
+  z-index: 2300;
 `;
 
 export const WindowsActionsContainer = styled.div`
@@ -56,6 +63,7 @@ export const WindowsActionsContainer = styled.div`
   display: flex;
   justify-content: space-around;
   margin-top: 4px;
+  postion: absolute;
   z-index: 1000;
 
   .close {
@@ -191,9 +199,9 @@ export const SearchBarContainer = styled.div<SideBarState>`
   margin-top: 12px;
   margin-left: 5px;
   border-radius: 12px;
-  left: ${({ expanded }) => (expanded ? '-229px' :'4px')};
+  left: ${({ expanded }) => (expanded ? '-229px' : '4px')};
   background: #8080808c;
-  transition: left 1.5s linear;
+  transition: left .5s linear;
 `;
 
 export const SearchInput = styled.input`

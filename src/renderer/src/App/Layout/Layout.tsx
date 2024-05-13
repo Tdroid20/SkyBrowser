@@ -44,6 +44,10 @@ export const Layout: React.FC = () => {
 
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
+  function updateSidebarStatus() {
+    setSidebarExpanded(!sidebarExpanded)
+  }
+  console.log(sidebarExpanded)
   return (
     <Container>
       <Link to="/" id="bH339HD" style={{ display: 'none' }}></Link>
@@ -51,9 +55,10 @@ export const Layout: React.FC = () => {
       {location.pathname !== "/newtab" && (
         <webview
           id="webview"
+          className={sidebarExpanded ? 'expanded' : ''}
         ></webview>
       )}
-      <SidebarComponent setSearchValue={setSearchValue} searchTo={searchTo} sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
+      <SidebarComponent setSearchValue={setSearchValue} searchTo={searchTo} sidebarExpanded={sidebarExpanded} updateSidebarStatus={updateSidebarStatus} />
     </Container>
   );
 };
