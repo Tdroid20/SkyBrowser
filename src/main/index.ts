@@ -75,17 +75,17 @@ function createWindow(): void {
 
   if (process.defaultApp) {
     if (process.argv.length >= 2) {
-      app.setAsDefaultProtocolClient('skysearch', process.execPath, [path.resolve(process.argv[1])]);
+      app.setAsDefaultProtocolClient('skyesearch', process.execPath, [path.resolve(process.argv[1])]);
     }
   } else {
-    app.setAsDefaultProtocolClient('skysearch')
+    app.setAsDefaultProtocolClient('skyesearch')
   }
 
-  protocol.registerHttpProtocol('skysearch', (request, _callback) => {
+  protocol.registerHttpProtocol('skyesearch', (request, _callback) => {
     if(typeof window !== "undefined") {
-      window.location.replace(`${process.env.APP_URL}/${request.url.replace("skysearch://", "")}`);
+      window.location.replace(`${process.env.APP_URL}/${request.url.replace("skyesearch://", "")}`);
     } else {
-      mainWindow.loadURL(`${process.env.APP_URL}/${request.url.replace("skysearch://", "")}`);
+      mainWindow.loadURL(`${process.env.APP_URL}/${request.url.replace("skyesearch://", "")}`);
     }
   });
 

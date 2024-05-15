@@ -16,7 +16,7 @@ export const SkyeSearch: React.FC<SidebarState> = ({ expanded }) => {
             Skye<SKDS_Strong style={{ position: 'relative', top: "-23px", fontSize: '34px' }}>Browser</SKDS_Strong>
           </WebStyleHBrandTypography>
         </WebStyleHBrandContainer>
-        <SkyeSearchBar />
+          <SkyeSearchBar />
       </SkyeSeachContent>
     </SkyeSearchContainer>
   )
